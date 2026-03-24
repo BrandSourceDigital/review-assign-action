@@ -64,10 +64,22 @@ async function setReviewers(input, event) {
   if (reviewers.length == 0) return;
 
   if (input.maxNumOfReviewers)  {
-    const maxNumOfReviewers = parseInt(input.maxNumOfReviewers);
+    let maxNumOfReviewers = parseInt(input.maxNumOfReviewers);
     if (!maxNumOfReviewers || maxNumOfReviewers < 1) {
       core.warning('"max-num-of-reviewers" input should be a number greater than or equal to 1.');
     } else {
+      const existingReviewers = await github.getRequestedReviewers(event, input.githubToken);
+      for (const existingReviewer of existingReviewers.map(reviewer => reviewer.login)) {
+        const reviewerIdx = reviewers.findIndex(reviewer => reviewer == existingReviewer);
+        if (reviewerIdx > -1) {
+          reviewers.splice(reviewerIdx, 1);
+          maxNumOfReviewers -= 1;
+          if (maxNumOfReviewers == 0) {
+            return;
+          }
+        }
+      }
+
       while(maxNumOfReviewers < reviewers.length) {
         reviewers.splice(getRandomInt(reviewers.length), 1);
       }

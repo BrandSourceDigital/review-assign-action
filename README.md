@@ -2,6 +2,8 @@
 
 Automatically set assignees and reviewers in pull request.
 
+This is a fork of the original action at https://github.com/hkusu/review-assign-action. This fork changes slightly the behavior of `max-num-of-reviewers`.
+
 ## Inputs
 
 All inputs for this action are **optional**, so use only the inputs you want to use.
@@ -17,6 +19,8 @@ Accounts to automatically set to reviewers when the pull request is opened(`open
 ### `max-num-of-reviewers`
 
 If this number is specified, reviewers are randomly selected less than the specified number. Useful for randomly assigning.
+
+If reviewers from the `reviewers` list are already assigned when the action runs, only add enough reviewers to satisfy this maximum number.
     
 ### `draft-keyword`
 
